@@ -36,12 +36,12 @@ namespace ImportExtensions
 
         private bool IsExtensionMethod(MethodInfo x)
         {
-            throw new NotImplementedException();
+            return x.IsStatic && true;
         }
 
         private bool IsStaticClass(Type x)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }
