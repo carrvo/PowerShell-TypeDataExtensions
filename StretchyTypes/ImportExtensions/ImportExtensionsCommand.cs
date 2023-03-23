@@ -19,7 +19,7 @@ namespace ImportExtensions
 
         protected override void ProcessRecord()
         {
-            IEnumerable<Type> staticClasses = FindClasses(Assembly)
+            IEnumerable<Type> staticClasses = Assembly.GetExportedTypes()
                 .Where(x => IsStaticClass(x));
             IEnumerable<MethodInfo> extensionMethods = staticClasses
                 .SelectMany(x => x.GetMethods()) //x.GetRuntimeMethods() ??
@@ -40,11 +40,6 @@ namespace ImportExtensions
         }
 
         private bool IsStaticClass(Type x)
-        {
-            throw new NotImplementedException();
-        }
-
-        private IEnumerable<Type> FindClasses(Assembly assembly)
         {
             throw new NotImplementedException();
         }
