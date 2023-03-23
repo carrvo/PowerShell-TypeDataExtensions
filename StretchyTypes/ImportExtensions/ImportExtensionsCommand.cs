@@ -28,8 +28,8 @@ namespace ImportExtensions
             
             foreach (MethodInfo extension in extensionMethods)
             {
-                InvokeCommand.InvokeScript(@"
-    Update-TypeData
+                InvokeCommand.InvokeScript($@"
+    Update-TypeData -TypeName {extension.GetParameters().First().ParameterType.Name} -MemberType CodeMethod -MemberName {extension.Name} -Value {extension.DeclaringType.Name} -SecondValue {extension.Name}
 ");
             }
         }
