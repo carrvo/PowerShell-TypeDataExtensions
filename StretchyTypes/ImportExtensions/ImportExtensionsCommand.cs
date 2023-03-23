@@ -17,6 +17,7 @@ namespace ImportExtensions
         [Parameter(Position = 0, Mandatory = false, ValueFromPipeline = true)]
         Assembly Assembly { get; set; } = Assembly.GetExecutingAssembly();
 
+        /// <inheritdoc/>
         protected override void ProcessRecord()
         {
             IEnumerable<Type> staticClasses = Assembly.GetExportedTypes()
@@ -29,7 +30,7 @@ namespace ImportExtensions
             foreach (MethodInfo extension in extensionMethods)
             {
                 InvokeCommand.InvokeScript($@"
-    Update-TypeData -TypeName {extension.GetParameters().First().ParameterType.Name} -MemberType CodeMethod -MemberName {extension.Name} -Value {extension.DeclaringType.Name} -SecondValue {extension.Name}
+    Update-TypeData -TypeName {extension.GetParameters().First().ParameterType.Name} -MemberType CodeMethod -MemberName {extension.Name} -Value {extension?.DeclaringType?.Name ?? String.Empty} -SecondValue {extension?.Name}
 ");
             }
         }
