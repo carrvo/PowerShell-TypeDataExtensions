@@ -20,11 +20,11 @@ namespace ImportExtensions
         protected override void ProcessRecord()
         {
             IEnumerable<Type> staticClasses = Assembly.GetExportedTypes()
-                .Where(x => IsStaticClass(x));
+                .Where(type => IsStaticClass(type));
             IEnumerable<MethodInfo> extensionMethods = staticClasses
-                .SelectMany(x => x.GetMethods()) //x.GetRuntimeMethods() ??
-                .Where(x => IsExtensionMethod(x));
-                //.GroupBy(x => ExtendsType(x));
+                .SelectMany(type => type.GetMethods()) //type.GetRuntimeMethods() ??
+                .Where(method => IsExtensionMethod(method));
+                //.GroupBy(method => ExtendsType(method));
             
             foreach (MethodInfo extension in extensionMethods)
             {
@@ -34,12 +34,12 @@ namespace ImportExtensions
             }
         }
 
-        private bool IsExtensionMethod(MethodInfo x)
+        private bool IsExtensionMethod(MethodInfo method)
         {
-            return x.IsStatic && true;
+            return method.IsStatic && true;
         }
 
-        private bool IsStaticClass(Type x)
+        private bool IsStaticClass(Type type)
         {
             return true;
         }
