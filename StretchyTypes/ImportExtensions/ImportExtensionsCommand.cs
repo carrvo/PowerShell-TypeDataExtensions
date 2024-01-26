@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Management.Automation;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
+[assembly:InternalsVisibleTo("ImportExtensions.UnitTests")]
 namespace ImportExtensions
 {
     /// <summary>
@@ -35,12 +37,12 @@ namespace ImportExtensions
             }
         }
 
-        private bool IsExtensionMethod(MethodInfo method)
+        internal static bool IsExtensionMethod(MethodInfo method)
         {
             return method.IsStatic && true;
         }
 
-        private bool IsStaticClass(Type type)
+        internal static bool IsStaticClass(Type type)
         {
             return true;
         }
