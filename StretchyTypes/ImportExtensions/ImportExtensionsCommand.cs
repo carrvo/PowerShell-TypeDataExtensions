@@ -37,14 +37,17 @@ namespace ImportExtensions
             }
         }
 
+        /// <remarks>
+        /// Kudos to https://stackoverflow.com/a/299526
+        /// </remarks>
         internal static bool IsExtensionMethod(MethodInfo method)
         {
-            return method.IsStatic && true;
+            return method.IsStatic && method.IsDefined(typeof(ExtensionAttribute), false);
         }
 
         internal static bool IsStaticClass(Type type)
         {
-            return true;
+            return type.IsDefined(typeof(ExtensionAttribute), false); // type.GetConstructors().Length == 0;
         }
     }
 }
