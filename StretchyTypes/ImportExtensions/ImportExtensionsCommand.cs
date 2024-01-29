@@ -42,9 +42,10 @@ namespace ImportExtensions
             
             foreach (MethodInfo extension in extensionMethods)
             {
-                InvokeCommand.InvokeScript($@"
-    Update-TypeData -TypeName {extension.GetParameters().First().ParameterType.Name} -MemberType CodeMethod -MemberName {extension.Name} -Value {extension?.DeclaringType?.Name ?? String.Empty} -SecondValue {extension?.Name}
-");
+                InvokeCommand.InvokeScript(@"
+    Param($ParameterType, $StaticMethod)
+    Update-TypeData -TypeName $ParameterType.Name -MemberType CodeMethod -MemberName $StaticMethod.Name -Value $StaticMethod -ErrorAction Stop
+", extension.GetParameters().First().ParameterType, extension);
             }
         }
 
