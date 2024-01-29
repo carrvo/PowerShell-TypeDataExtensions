@@ -2,6 +2,7 @@
 using System.Management.Automation;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 [assembly:InternalsVisibleTo("ImportExtensions.UnitTests")]
 namespace ImportExtensions
@@ -42,10 +43,13 @@ namespace ImportExtensions
             
             foreach (MethodInfo extension in extensionMethods)
             {
+                var scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
+                var parameterType = extension.GetParameters().First().ParameterType;
+                WriteVerbose($"Update-TypeData -TypeName {parameterType.FullName} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} -ErrorAction Stop");
                 InvokeCommand.InvokeScript(@"
-    Param($ParameterType, $StaticMethod)
-    Update-TypeData -TypeName $ParameterType.Name -MemberType CodeMethod -MemberName $StaticMethod.Name -Value $StaticMethod -ErrorAction Stop
-", extension.GetParameters().First().ParameterType, extension);
+    Param($ParameterType, $StaticMethod, $ScriptBlock)
+    Update-TypeData -TypeName $ParameterType.FullName -MemberType ScriptMethod -MemberName $StaticMethod.Name -Value $ScriptBlock -ErrorAction Stop
+", parameterType, extension, scriptBlock);
             }
         }
 
@@ -60,6 +64,28 @@ namespace ImportExtensions
         internal static bool IsStaticClass(Type type)
         {
             return type.IsDefined(typeof(ExtensionAttribute), false); // type.GetConstructors().Length == 0;
+        }
+
+        internal String ToScriptBlock(MethodInfo staticMethod)
+        {
+            StringBuilder command = new StringBuilder();
+            IList<String> arguments = new List<String>();
+
+            command.AppendLine("Param(");
+            foreach (var parameterInfo in staticMethod.GetParameters())
+            {
+                command.AppendLine($"  [{parameterInfo.ParameterType.FullName}] ${parameterInfo.Name},");
+                arguments.Add($"${parameterInfo.Name}");
+            }
+            command.Remove(command.Length - Environment.NewLine.Length - 1, 1); // remove final comma `,`
+            command.AppendLine(")");
+
+            command.Append($"[{staticMethod.DeclaringType?.FullName}]::{staticMethod.Name}");
+            command.Append("(");
+            command.AppendJoin(", ", arguments);
+            command.Append(")");
+
+            return command.ToString();
         }
     }
 }
