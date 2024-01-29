@@ -38,14 +38,25 @@ namespace ImportExtensions
             IEnumerable<MethodInfo> extensionMethods = staticClasses
                 .SelectMany(type => type.GetMethods()) //type.GetRuntimeMethods() ??
                 .Where(method => IsExtensionMethod(method));
-                //.GroupBy(method => ExtendsType(method));
-            
+            //.GroupBy(method => ExtendsType(method));
+
+            var update = InvokeCommand.GetCmdlet("Update-TypeData");
             foreach (MethodInfo extension in extensionMethods)
             {
-                InvokeCommand.InvokeScript(@"
-    Param($ParameterType, $StaticMethod)
-    Update-TypeData -TypeName $ParameterType.Name -MemberType CodeMethod -MemberName $StaticMethod.Name -Value $StaticMethod -ErrorAction Stop
-", extension.GetParameters().First().ParameterType, extension);
+                var parameterType = extension.GetParameters().First().ParameterType;
+                WriteVerbose($"{update.Name} -TypeName {parameterType.FullName} -MemberType CodeMethod -MemberName {extension.Name} -Value {extension} -ErrorAction Stop");
+                InvokeCommand.InvokeScript(update.Name,
+                    "-TypeName",
+                    parameterType.FullName,
+                    "-MemberType",
+                    "CodeMethod",
+                    "-MemberName",
+                    extension.Name,
+                    "-Value",
+                    extension,
+                    "-ErrorAction",
+                    "Stop"
+                );
             }
         }
 
