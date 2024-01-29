@@ -23,7 +23,7 @@ namespace ImportExtensions.UnitTests
         public void ShouldBeCallable()
         {
             var scriptBlock = ScriptBlock.Create(Sut.ToScriptBlock(ExtensionMethod));
-            var output = scriptBlock.Invoke(Input, nameof(ShouldBeCallable)).Single().BaseObject;
+            var output = scriptBlock.Invoke(nameof(ShouldBeCallable)).Single().BaseObject;
 
             output.Should().BeOfType<String>();
             var str = output as String;

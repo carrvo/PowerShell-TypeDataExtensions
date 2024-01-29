@@ -72,7 +72,7 @@ namespace ImportExtensions
             IList<String> arguments = new List<String>();
 
             command.AppendLine("Param(");
-            foreach (var parameterInfo in staticMethod.GetParameters())
+            foreach (var parameterInfo in staticMethod.GetParameters().Skip(1))
             {
                 command.AppendLine($"  [{parameterInfo.ParameterType.FullName}] ${parameterInfo.Name},");
                 arguments.Add($"${parameterInfo.Name}");
@@ -82,7 +82,12 @@ namespace ImportExtensions
 
             command.Append($"[{staticMethod.DeclaringType?.FullName}]::{staticMethod.Name}");
             command.Append("(");
-            command.AppendJoin(", ", arguments);
+            command.Append("$this");
+            if (arguments.Any())
+            {
+                command.Append(", ");
+                command.AppendJoin(", ", arguments);
+            }
             command.Append(")");
 
             return command.ToString();
