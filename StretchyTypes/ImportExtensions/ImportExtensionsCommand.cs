@@ -10,18 +10,29 @@ namespace ImportExtensions
     /// <para type="synopsis"></para>
     /// <para type="description"></para>
     /// </summary>
-    [Cmdlet(VerbsData.Import, "Extensions", ConfirmImpact = ConfirmImpact.High, RemotingCapability = RemotingCapability.None)]
+    [Cmdlet(VerbsData.Import, "Extensions", DefaultParameterSetName = "assembly", ConfirmImpact = ConfirmImpact.High, RemotingCapability = RemotingCapability.None)]
     public sealed class ImportExtensionsCommand : PSCmdlet
     {
         /// <summary>
         /// <para type="synopsis"></para>
         /// </summary>
-        [Parameter(Position = 0, Mandatory = false, ValueFromPipeline = true)]
+        [Parameter(Position = 0, Mandatory = false, ValueFromPipeline = true, ParameterSetName = "assembly")]
         public Assembly Assembly { get; set; } = Assembly.GetExecutingAssembly();
+
+        /// <summary>
+        /// <para type="synopsis"></para>
+        /// </summary>
+        [Parameter(Position = 0, Mandatory = true, ValueFromPipeline = true, ParameterSetName = "path")]
+        public FileInfo Path { get; set; } = null;
 
         /// <inheritdoc/>
         protected override void ProcessRecord()
         {
+            if (Path != null)
+            {
+                Assembly = Assembly.LoadFrom(Path.FullName);
+            }
+
             IEnumerable<Type> staticClasses = Assembly.GetExportedTypes()
                 .Where(type => IsStaticClass(type));
             IEnumerable<MethodInfo> extensionMethods = staticClasses

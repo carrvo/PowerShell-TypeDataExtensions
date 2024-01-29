@@ -1,10 +1,8 @@
 using module .\bin\Debug\net7.0\ImportExtensions.dll
-#using assembly .\bin\Debug\net7.0\ImportExtensions.UnitTests.dll
 
 Describe "ImportExtensions" {
 	Context "When Importing" {
-		$assembly = [System.Reflection.Assembly]::LoadFile($(Get-Item '.\bin\Debug\net7.0\ImportExtensions.UnitTests.dll' | Select-Object -ExpandProperty FullName))
-		Import-Extensions -Assembly $assembly
+		Import-Extensions -Path '.\bin\Debug\net7.0\ImportExtensions.UnitTests.dll'
 
 		It "Maps Extension" {
 			<#Get-TypeData -TypeName ImportExtensions.UnitTests.ExampleClass |
