@@ -17,12 +17,12 @@ namespace ImportExtensions.UnitTests
 
     public static class ExampleClassExtensions
     {
-        public static String StaticMethod(String name)
+        public static String StaticMethod(ExampleClass example, String name)
         {
             return $"Hello {name} from {nameof(StaticMethod)}";
         }
 
-        public static String ExtensionMethod(this String name)
+        public static String ExtensionMethod(this ExampleClass example, String name)
         {
             return $"Hello {name} from {nameof(ExtensionMethod)}";
         }
