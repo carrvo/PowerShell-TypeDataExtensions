@@ -8,7 +8,7 @@ Describe "ImportExtensions" {
 			<#Get-TypeData -TypeName ImportExtensions.UnitTests.ExampleClass |
 				Select-Object -ExpandProperty Members#>
 			$example = New-Object ImportExtensions.UnitTests.ExampleClass
-			$example.ExtensionMethod("me") | Should Be "Hello me from ExtensionMethod"
+			$example.ExtensionMethod("me") | Should -Be "Hello me from ExtensionMethod"
 		}
 	}
 }
