@@ -40,16 +40,21 @@ namespace ImportExtensions
                 .SelectMany(type => type.GetMethods()) //type.GetRuntimeMethods() ??
                 .Where(method => IsExtensionMethod(method));
                 //.GroupBy(method => ExtendsType(method));
+
+            if (!MyInvocation.BoundParameters.TryGetValue("ErrorAction", out Object errorAction))
+            {
+                errorAction = GetVariableValue("ErrorActionPreference");
+            }
             
             foreach (MethodInfo extension in extensionMethods)
             {
                 var scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
                 var parameterType = extension.GetParameters().First().ParameterType;
-                WriteVerbose($"Update-TypeData -TypeName {parameterType.FullName} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} -ErrorAction Stop");
+                WriteVerbose($"Update-TypeData -TypeName {parameterType.FullName} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} -ErrorAction {errorAction}");
                 InvokeCommand.InvokeScript(@"
-    Param($ParameterType, $StaticMethod, $ScriptBlock)
-    Update-TypeData -TypeName $ParameterType.FullName -MemberType ScriptMethod -MemberName $StaticMethod.Name -Value $ScriptBlock -ErrorAction Stop
-", parameterType, extension, scriptBlock);
+    Param($ParameterType, $StaticMethod, $ScriptBlock, $ErrorAction)
+    Update-TypeData -TypeName $ParameterType.FullName -MemberType ScriptMethod -MemberName $StaticMethod.Name -Value $ScriptBlock -ErrorAction $ErrorAction
+", parameterType, extension, scriptBlock, errorAction);
             }
         }
 
