@@ -17,7 +17,7 @@ namespace ImportExtensions
         /// <para type="synopsis"></para>
         /// </summary>
         [Parameter(Position = 0, Mandatory = false, ValueFromPipeline = true)]
-        Assembly Assembly { get; set; } = Assembly.GetExecutingAssembly();
+        public Assembly Assembly { get; set; } = Assembly.GetExecutingAssembly();
 
         /// <inheritdoc/>
         protected override void ProcessRecord()
