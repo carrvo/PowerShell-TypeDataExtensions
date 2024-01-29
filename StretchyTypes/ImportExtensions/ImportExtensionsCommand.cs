@@ -41,20 +41,19 @@ namespace ImportExtensions
                 .Where(method => IsExtensionMethod(method));
                 //.GroupBy(method => ExtendsType(method));
 
-            if (!MyInvocation.BoundParameters.TryGetValue("ErrorAction", out Object errorAction))
-            {
-                errorAction = GetVariableValue("ErrorActionPreference");
-            }
+            var bound = MyInvocation.BoundParameters.ToDictionary(entry => entry.Key, entry => entry.Value);
+            bound.Remove(nameof(Path));
+            bound.Remove(nameof(Assembly));
             
             foreach (MethodInfo extension in extensionMethods)
             {
                 var scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
                 var parameterType = extension.GetParameters().First().ParameterType;
-                WriteVerbose($"Update-TypeData -TypeName {parameterType.FullName} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} -ErrorAction {errorAction}");
+                WriteVerbose($"Update-TypeData -TypeName {parameterType.FullName} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} {String.Join(" ", bound.Select(x => $"-{x.Key} {x.Value}"))}");
                 InvokeCommand.InvokeScript(@"
-    Param($ParameterType, $StaticMethod, $ScriptBlock, $ErrorAction)
-    Update-TypeData -TypeName $ParameterType.FullName -MemberType ScriptMethod -MemberName $StaticMethod.Name -Value $ScriptBlock -ErrorAction $ErrorAction
-", parameterType, extension, scriptBlock, errorAction);
+    Param($ParameterType, $StaticMethod, $ScriptBlock, $Bound)
+    Update-TypeData -TypeName $ParameterType.FullName -MemberType ScriptMethod -MemberName $StaticMethod.Name -Value $ScriptBlock @Bound
+", parameterType, extension, scriptBlock, bound);
             }
         }
 
