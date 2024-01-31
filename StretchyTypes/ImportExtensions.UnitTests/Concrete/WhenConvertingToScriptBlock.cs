@@ -1,6 +1,6 @@
 ﻿using System.Management.Automation;
 
-namespace ImportExtensions.UnitTests
+namespace ImportExtensions.UnitTests.Concrete
 {
     public sealed class WhenConvertingToScriptBlock
     {
@@ -25,8 +25,8 @@ namespace ImportExtensions.UnitTests
             var scriptBlock = ScriptBlock.Create(Sut.ToScriptBlock(ExtensionMethod));
             var output = scriptBlock.Invoke(nameof(ShouldBeCallable)).Single().BaseObject;
 
-            output.Should().BeOfType<String>();
-            var str = output as String;
+            output.Should().BeOfType<string>();
+            var str = output as string;
             str.Should().Be($"Hello {nameof(ShouldBeCallable)} from {nameof(ExampleClassExtensions.ExtensionMethod)}");
         }
     }

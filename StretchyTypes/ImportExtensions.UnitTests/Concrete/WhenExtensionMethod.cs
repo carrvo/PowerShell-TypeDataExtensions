@@ -1,4 +1,4 @@
-﻿namespace ImportExtensions.UnitTests
+﻿namespace ImportExtensions.UnitTests.Concrete
 {
     public sealed class WhenExtensionMethod
     {
