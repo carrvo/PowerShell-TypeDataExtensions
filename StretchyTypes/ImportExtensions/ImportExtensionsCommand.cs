@@ -14,6 +14,8 @@ namespace ImportExtensions
     [Cmdlet(VerbsData.Import, "Extensions", DefaultParameterSetName = "assembly", ConfirmImpact = ConfirmImpact.High, RemotingCapability = RemotingCapability.None)]
     public sealed class ImportExtensionsCommand : PSCmdlet
     {
+        internal const String ExtensionErrorId = "Import Extension Error";
+
         /// <summary>
         /// <para type="synopsis"></para>
         /// </summary>
@@ -47,13 +49,21 @@ namespace ImportExtensions
             
             foreach (MethodInfo extension in extensionMethods)
             {
-                var scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
-                var parameterType = extension.GetParameters().First().ParameterType;
-                WriteVerbose($"Update-TypeData -TypeName {parameterType.FullName} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} {String.Join(" ", bound.Select(x => $"-{x.Key} {x.Value}"))}");
-                InvokeCommand.InvokeScript(@"
+                try
+                {
+                    WriteVerbose($"Extension Method found: `{extension.DeclaringType?.FullName}.{extension.Name}`");
+                    var scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
+                    var parameterType = extension.GetParameters().First().ParameterType;
+                    WriteVerbose($"Update-TypeData -TypeName {parameterType} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} {String.Join(" ", bound.Select(x => $"-{x.Key} {x.Value}"))}");
+                    InvokeCommand.InvokeScript(@"
     Param($ParameterType, $StaticMethod, $ScriptBlock, $Bound)
-    Update-TypeData -TypeName $ParameterType.FullName -MemberType ScriptMethod -MemberName $StaticMethod.Name -Value $ScriptBlock @Bound
+    Update-TypeData -TypeName $ParameterType.ToString() -MemberType ScriptMethod -MemberName $StaticMethod.Name -Value $ScriptBlock @Bound
 ", parameterType, extension, scriptBlock, bound);
+                }
+                catch (Exception ex)
+                {
+                    WriteError(new ErrorRecord(ex, ExtensionErrorId, ErrorCategory.NotSpecified, extension));
+                }
             }
         }
 
