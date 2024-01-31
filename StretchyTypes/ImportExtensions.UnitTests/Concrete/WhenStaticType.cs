@@ -3,9 +3,15 @@
     public sealed class WhenStaticType
     {
         [Fact]
-        public void ShouldBeStatic()
+        public void ShouldBeExtension()
         {
             ImportExtensionsCommand.IsStaticClass(typeof(ExampleClassExtensions)).Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldNotBeExtension()
+        {
+            ImportExtensionsCommand.IsStaticClass(typeof(ExampleStatic)).Should().BeFalse();
         }
     }
 }

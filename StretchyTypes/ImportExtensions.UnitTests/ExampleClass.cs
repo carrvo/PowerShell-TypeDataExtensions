@@ -1,4 +1,6 @@
-﻿namespace ImportExtensions.UnitTests
+﻿using ImportExtensions.UnitTests.Generic;
+
+namespace ImportExtensions.UnitTests
 {
     public interface IExampleClass
     {
@@ -12,6 +14,14 @@
         }
 
         public static string StaticMethod(string name)
+        {
+            return $"Hello {name} from {nameof(StaticMethod)}";
+        }
+    }
+
+    public static class ExampleStatic
+    {
+        public static string StaticMethod(ExampleClass example, string name)
         {
             return $"Hello {name} from {nameof(StaticMethod)}";
         }

@@ -6,9 +6,14 @@ namespace ImportExtensions.UnitTests
 {
     public static class RunspaceWrapper
     {
-        public static Runspace RunspaceExecution { get; }
+        public static Runspace RunspaceExecution { get; private set; }
 
         static RunspaceWrapper()
+        {
+            SetDefaultRunspace();
+        }
+
+        public static void SetDefaultRunspace()
         {
             RunspaceExecution = RunspaceFactory.CreateRunspace();
             RunspaceExecution.Open();

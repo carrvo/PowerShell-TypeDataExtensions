@@ -11,8 +11,9 @@ namespace ImportExtensions.UnitTests.Interface
         public WhenConvertingToScriptBlock()
         {
             ExtensionMethod = typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.ExtensionIMethod));
-            _ = RunspaceWrapper.RunspaceExecution;
+            RunspaceWrapper.SetDefaultRunspace();
 
+            RunspaceWrapper.RunspaceExecution.Should().NotBeNull();
             ExtensionMethod.Should().NotBeNull();
 
             Sut = new ImportExtensionsCommand();
