@@ -5,7 +5,7 @@
         [Fact]
         public void ShouldNotBeStatic()
         {
-            ImportExtensionsCommand.IsStaticClass(typeof(IExampleClass)).Should().BeFalse();
+            ImportExtensionsCommand.IsExtensionClass(typeof(IExampleClass)).Should().BeFalse();
         }
     }
 }

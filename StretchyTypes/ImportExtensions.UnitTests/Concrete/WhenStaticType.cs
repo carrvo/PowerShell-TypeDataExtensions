@@ -5,13 +5,13 @@
         [Fact]
         public void ShouldBeExtension()
         {
-            ImportExtensionsCommand.IsStaticClass(typeof(ExampleClassExtensions)).Should().BeTrue();
+            ImportExtensionsCommand.IsExtensionClass(typeof(ExampleClassExtensions)).Should().BeTrue();
         }
 
         [Fact]
         public void ShouldNotBeExtension()
         {
-            ImportExtensionsCommand.IsStaticClass(typeof(ExampleStatic)).Should().BeFalse();
+            ImportExtensionsCommand.IsExtensionClass(typeof(ExampleStatic)).Should().BeFalse();
         }
     }
 }

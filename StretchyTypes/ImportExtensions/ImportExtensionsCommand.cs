@@ -35,7 +35,7 @@ namespace ImportExtensions
             }
 
             IEnumerable<Type> staticClasses = Assembly.GetExportedTypes()
-                .Where(type => IsStaticClass(type));
+                .Where(type => IsExtensionClass(type));
             IEnumerable<MethodInfo> extensionMethods = staticClasses
                 .SelectMany(type => type.GetMethods()) //type.GetRuntimeMethods() ??
                 .Where(method => IsExtensionMethod(method));
@@ -65,7 +65,7 @@ namespace ImportExtensions
             return method.IsStatic && method.IsDefined(typeof(ExtensionAttribute), false);
         }
 
-        internal static bool IsStaticClass(Type type)
+        internal static bool IsExtensionClass(Type type)
         {
             return type.IsDefined(typeof(ExtensionAttribute), false); // type.GetConstructors().Length == 0;
         }
