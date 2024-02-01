@@ -3,6 +3,7 @@ using ImportExtensions.Validation;
 using System;
 using System.ComponentModel;
 using System.Management.Automation.Runspaces;
+using System.Reflection;
 
 namespace ImportExtensions
 {
@@ -21,13 +22,13 @@ namespace ImportExtensions
         /// </summary>
         [Parameter(Mandatory = true)]
         [ValidateGenericType]
-        public Type Generic { get; set; }
+        //[TypeConverter(typeof(TypeDefinitionConverter))] // only works when attributed on classes
+        public TypeDelegator Generic { get; set; }
 
         /// <summary>
         /// <para type="synopsis"></para>
         /// </summary>
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
-        //[TypeConverter(typeof(TypeDefinitionConverter))]
         public Type[] Specific { get; set; }
 
         private Dictionary<String, Object> InvocationParameters { get; set; }
@@ -60,12 +61,14 @@ namespace ImportExtensions
             Type newType = default;
             try
             {
+                WriteVerbose($"Determining type from `{Generic}` combined with: `{String.Join("`, `", Specific.Select(x => x.ToString()))}`");
                 newType = Generic.MakeGenericType(Specific);
                 if (newType is null)
                 {
                     WriteError(new ErrorRecord(new ArgumentException("Could not generate specific type!"), ExtensionErrorId, ErrorCategory.InvalidArgument, Specific));
                     return;
                 }
+                WriteVerbose($"Creating TypeData for: `{newType}`");
 
                 foreach (var memberdata in GenericTypeData
                     .Members

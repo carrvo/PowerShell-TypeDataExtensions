@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace ImportExtensions.TypeConverters
@@ -12,11 +13,13 @@ namespace ImportExtensions.TypeConverters
     /// - use the type of the source
     /// - pass through if the source is a type
     /// </summary>
-    public sealed class TypeDefinitionConverter : PSTypeConverter
+    public sealed class TypeDelegatorConverter : PSTypeConverter
     {
+        private Regex BuiltInConverter = new Regex(@"^\[(?<type>.*)\]$");
+
         /// <inheritdoc/>
         public override bool CanConvertFrom(object sourceValue, Type destinationType)
-            => destinationType == typeof(Type);
+            => destinationType == typeof(TypeDelegator);
 
         /// <inheritdoc/>
         public override bool CanConvertTo(object sourceValue, Type destinationType)
@@ -27,20 +30,29 @@ namespace ImportExtensions.TypeConverters
         {
             if (sourceValue is Type type)
             {
-                return type;
+                return new GenericType(type);
             }
             else if (sourceValue is String typeName)
             {
+                var shortName = typeName.Split(".").Last();
+                var builtin = BuiltInConverter.Match(typeName);
+                if (builtin.Success)
+                {
+                    typeName = builtin.Groups["type"].Value;
+                }
                 Regex typeRegex = new Regex(typeName);
-                return AppDomain
+                var potentialTypes = AppDomain
                     .CurrentDomain
                     .GetAssemblies()
                     .SelectMany(assembly => assembly.ExportedTypes)
-                    .First(type => type.ToString() == typeName || typeRegex.IsMatch(type.ToString()));
+                    .Where(type => type.ToString() == typeName || typeRegex.IsMatch(type.ToString()));
+                // find best match
+                var bestMatch = potentialTypes.FirstOrDefault(type => type.Name == shortName) ?? potentialTypes.First();
+                return new GenericType(bestMatch);
             }
             else
             {
-                return sourceValue.GetType();
+                return new GenericType(sourceValue.GetType());
             }
         }
 

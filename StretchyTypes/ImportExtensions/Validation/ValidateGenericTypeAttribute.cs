@@ -3,6 +3,7 @@ using System.Management.Automation;
 
 namespace ImportExtensions.Validation
 {
+    /// <inheritdoc/>
     internal sealed class ValidateGenericTypeAttribute : ValidateArgumentsAttribute
     {
         /// <inheritdoc/>
