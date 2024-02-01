@@ -35,10 +35,9 @@ namespace ImportExtensions.TypeConverters
             else if (sourceValue is String typeName)
             {
                 var shortName = typeName.Split(".").Last();
-                var builtin = BuiltInConverter.Match(typeName);
-                if (builtin.Success)
+                if (BuiltInConverter.IsMatch(typeName))
                 {
-                    typeName = builtin.Groups["type"].Value;
+                    throw new ArgumentException($"Do not wrap in []: {typeName}");
                 }
                 Regex typeRegex = new Regex(typeName);
                 var potentialTypes = AppDomain
