@@ -15,6 +15,8 @@ namespace ImportExtensions.TypeConverters
     /// </summary>
     public sealed class TypeDelegatorConverter : PSTypeConverter
     {
+        private Regex BuiltInConverter = new Regex(@"^\[(?<type>.*)\]$");
+
         /// <inheritdoc/>
         public override bool CanConvertFrom(object sourceValue, Type destinationType)
             => destinationType == typeof(TypeDelegator);
@@ -33,6 +35,11 @@ namespace ImportExtensions.TypeConverters
             else if (sourceValue is String typeName)
             {
                 var shortName = typeName.Split(".").Last();
+                var builtin = BuiltInConverter.Match(typeName);
+                if (builtin.Success)
+                {
+                    typeName = builtin.Groups["type"].Value;
+                }
                 Regex typeRegex = new Regex(typeName);
                 var potentialTypes = AppDomain
                     .CurrentDomain
