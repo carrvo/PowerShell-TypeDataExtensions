@@ -17,6 +17,12 @@ namespace ImportExtensions.TypeConverters
         public override bool IsGenericType => base.typeImpl.IsGenericType;
 
         /// <inheritdoc/>
+        public override string FullName => base.typeImpl.ToString();
+
+        /// <inheritdoc/>
         public override string ToString() => base.typeImpl.ToString();
+
+        /// <inheritdoc/>
+        public override Type MakeGenericType(params Type[] typeArguments) => base.typeImpl.MakeGenericType(typeArguments);
     }
 }

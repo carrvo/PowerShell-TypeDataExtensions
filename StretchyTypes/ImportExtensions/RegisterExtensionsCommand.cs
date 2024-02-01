@@ -41,6 +41,7 @@ namespace ImportExtensions
             InvocationParameters.Remove(nameof(Generic));
             InvocationParameters.Remove(nameof(Specific));
 
+            WriteVerbose($"Finding TypeData for: `{Generic.FullName}`");
             GenericTypeData = InvokeCommand.InvokeScript(@"
                     Param($GenericType, $Bound)
                     Get-TypeData @Bound |

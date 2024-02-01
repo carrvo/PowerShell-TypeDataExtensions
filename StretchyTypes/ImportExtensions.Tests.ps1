@@ -1,4 +1,4 @@
-using module .\bin\Debug\net7.0\ImportExtensions.dll
+using module .\bin\Debug\net7.0\StretchyTypes.psd1
 
 Describe "ImportExtensions" {
 	Context "When Importing" {
@@ -28,11 +28,13 @@ Describe "ImportExtensions" {
 			$example.ExtensionIMethod("me") | Should -Be "Hello me from ExtensionIMethod"
 		}
 
+		Register-Extensions -Generic ImportExtensions.UnitTests.Generic.ExampleClass -Specific int
+
 		It "Updates TypeData for Generic Extension" {
 			Get-TypeData |
 				Where-Object TypeName -Match ImportExtensions.UnitTests.Generic.ExampleClass |
 				Select-Object -ExpandProperty Members |
-				Select-Object -ExpandProperty Keys |
+				Select-Object -First 1 -ExpandProperty Keys |
 				Should -Be "ExtensionMethod"
 		}
 
