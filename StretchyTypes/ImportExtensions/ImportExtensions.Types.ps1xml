@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+  <Type>
+     <Name>System.Type</Name>
+     <TypeConverter>
+       <TypeName>ImportExtensions.TypeConverters.TypeDefinitionConverter</TypeName>
+     </TypeConverter>
+    </Type>
+</Types>
