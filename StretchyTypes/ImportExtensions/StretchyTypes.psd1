@@ -30,7 +30,7 @@ CompanyName = 'carrvo'
 Copyright = '(c) carrvo. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Loads and converts .NET extension methods into TypeData'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '7.0'
@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'ExtensionMethods'
+        Tags = 'ExtensionMethods','Extension','TypeData'
 
         # A URL to the license for this module.
         # LicenseUri = ''
