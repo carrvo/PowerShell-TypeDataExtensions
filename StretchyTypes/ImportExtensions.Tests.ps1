@@ -8,6 +8,7 @@ Describe "ImportExtensions" {
 			Get-TypeData -TypeName ImportExtensions.UnitTests.ExampleClass |
 				Select-Object -ExpandProperty Members |
 				Select-Object -ExpandProperty Keys |
+				Select-Object -First 1 |
 				Should -Be "ExtensionMethod"
 		}
 
@@ -15,6 +16,8 @@ Describe "ImportExtensions" {
 			$example = New-Object ImportExtensions.UnitTests.ExampleClass
 			$example.ExtensionMethod("me") | Should -Be "Hello me from ExtensionMethod"
 		}
+
+		Register-InterfaceExtensions -Interface ImportExtensions.UnitTests.IExampleClass -Concrete ImportExtensions.UnitTests.ExampleClass
 
 		It "Updates TypeData for Interface Extension" {
 			Get-TypeData -TypeName ImportExtensions.UnitTests.IExampleClass |
