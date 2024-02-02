@@ -11,9 +11,9 @@ namespace ImportExtensions
     /// <para type="synopsis"></para>
     /// <para type="description"></para>
     /// </summary>
-    [Cmdlet(VerbsLifecycle.Register, "Extensions")]
-    [Alias("Expand-Extensions")]
-    public sealed class RegisterExtensionsCommand : PSCmdlet
+    [Cmdlet(VerbsLifecycle.Register, "GenericExtensions")]
+    [Alias("Expand-GenericExtensions")]
+    public sealed class RegisterGenericExtensionsCommand : PSCmdlet
     {
         internal const String ExtensionErrorId = "Register Extension Error";
 

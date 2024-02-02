@@ -28,7 +28,7 @@ Describe "ImportExtensions" {
 			$example.ExtensionIMethod("me") | Should -Be "Hello me from ExtensionIMethod"
 		}
 
-		Register-Extensions -Generic ImportExtensions.UnitTests.Generic.ExampleClass -Specific int
+		Register-GenericExtensions -Generic ImportExtensions.UnitTests.Generic.ExampleClass -Specific int
 
 		It "Updates TypeData for Generic Extension" {
 			Get-TypeData |
