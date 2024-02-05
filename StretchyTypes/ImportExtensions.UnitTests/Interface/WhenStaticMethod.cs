@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.Reflection;
 using Xunit;
 
 namespace ImportExtensions.UnitTests.Interface
@@ -8,7 +9,15 @@ namespace ImportExtensions.UnitTests.Interface
         [Fact]
         public void FromStaticType_ShouldNotBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionMethod(typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.StaticIMethod))).Should().BeFalse();
+            MethodInfo method = typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.StaticIMethod));
+            ImportExtensionsCommand
+                .IsExtensionMethod(method)
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
     }
 }

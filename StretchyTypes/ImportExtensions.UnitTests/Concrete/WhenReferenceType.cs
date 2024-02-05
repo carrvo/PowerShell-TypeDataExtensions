@@ -8,7 +8,14 @@ namespace ImportExtensions.UnitTests.Concrete
         [Fact]
         public void ShouldNotBeStatic()
         {
-            ImportExtensionsCommand.IsExtensionClass(typeof(ExampleClass)).Should().BeFalse();
+            ImportExtensionsCommand
+                .IsExtensionClass(typeof(ExampleClass))
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
     }
 }

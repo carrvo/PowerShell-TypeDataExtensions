@@ -8,7 +8,14 @@ namespace ImportExtensions.UnitTests.Generic
         [Fact]
         public void ShouldBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionClass(typeof(ExampleStatic<int>)).Should().BeFalse();
+            ImportExtensionsCommand
+                .IsExtensionClass(typeof(ExampleStatic<int>))
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
     }
 }
