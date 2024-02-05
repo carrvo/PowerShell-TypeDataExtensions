@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
@@ -20,10 +21,12 @@ namespace ImportExtensions.UnitTests
             Runspace.DefaultRunspace = RunspaceExecution;
         }
 
+#if NET7_0_OR_GREATER
         public static Collection<PSObject> RunspaceExecute(String command, params Object[] input)
         {
             var pipeline = RunspaceExecution.CreatePipeline(command);
             return pipeline.Invoke(input);
         }
+#endif
     }
 }

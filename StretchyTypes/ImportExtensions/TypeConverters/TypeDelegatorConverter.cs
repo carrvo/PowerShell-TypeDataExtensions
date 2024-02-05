@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -34,7 +35,7 @@ namespace ImportExtensions.TypeConverters
             }
             else if (sourceValue is String typeName)
             {
-                var shortName = typeName.Split(".").Last();
+                var shortName = typeName.Split('.').Last();
                 if (BuiltInConverter.IsMatch(typeName))
                 {
                     throw new ArgumentException($"Do not wrap in []: {typeName}");
@@ -44,9 +45,9 @@ namespace ImportExtensions.TypeConverters
                     .CurrentDomain
                     .GetAssemblies()
                     .SelectMany(assembly => assembly.ExportedTypes)
-                    .Where(type => type.ToString() == typeName || typeRegex.IsMatch(type.ToString()));
+                    .Where(expType => expType.ToString() == typeName || typeRegex.IsMatch(expType.ToString()));
                 // find best match
-                var bestMatch = potentialTypes.FirstOrDefault(type => type.Name == shortName) ?? potentialTypes.First();
+                var bestMatch = potentialTypes.FirstOrDefault(potType => potType.Name == shortName) ?? potentialTypes.First();
                 return new GenericType(bestMatch);
             }
             else

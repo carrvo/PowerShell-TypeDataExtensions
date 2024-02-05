@@ -1,10 +1,14 @@
-﻿using System.Management.Automation;
+﻿using FluentAssertions;
+using System.Linq;
+using System.Management.Automation;
+using System.Reflection;
+using Xunit;
 
 namespace ImportExtensions.UnitTests.Interface
 {
     public sealed class WhenConvertingToScriptBlock
     {
-        public MethodInfo? ExtensionMethod { get; set; }
+        public MethodInfo ExtensionMethod { get; set; }
         public ImportExtensionsCommand Sut { get; }
         public IExampleClass Input { get; }
 

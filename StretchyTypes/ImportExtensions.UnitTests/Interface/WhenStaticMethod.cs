@@ -1,4 +1,7 @@
-﻿namespace ImportExtensions.UnitTests.Interface
+﻿using FluentAssertions;
+using Xunit;
+
+namespace ImportExtensions.UnitTests.Interface
 {
     public sealed class WhenStaticMethod
     {

@@ -1,4 +1,7 @@
-﻿namespace ImportExtensions.UnitTests.Generic
+﻿using FluentAssertions;
+using Xunit;
+
+namespace ImportExtensions.UnitTests.Generic
 {
     public sealed class WhenReferenceMethod
     {
