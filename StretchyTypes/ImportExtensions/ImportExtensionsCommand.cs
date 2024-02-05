@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -100,7 +103,11 @@ namespace ImportExtensions
             if (arguments.Any())
             {
                 command.Append(", ");
+#if NET7_0_OR_GREATER
                 command.AppendJoin(", ", arguments);
+#else
+                command.Append(String.Join(", ", arguments));
+#endif
             }
             command.Append(")");
 
