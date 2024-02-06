@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>warnings</Nullable>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <BaseOutputPath>..\bin\</BaseOutputPath>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageProjectUrl>https://github.com/carrvo/PowerShell-TypeDataExtensions</PackageProjectUrl>
