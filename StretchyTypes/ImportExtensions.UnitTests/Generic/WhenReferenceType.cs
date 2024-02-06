@@ -3,7 +3,6 @@ using Xunit;
 
 namespace ImportExtensions.UnitTests.Generic
 {
-#if !SKIP_TESTS
     public sealed class WhenReferenceType
     {
         [Fact]
@@ -19,5 +18,4 @@ namespace ImportExtensions.UnitTests.Generic
 #endif
         }
     }
-#endif
 }

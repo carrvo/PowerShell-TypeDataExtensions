@@ -4,7 +4,6 @@ using Xunit;
 
 namespace ImportExtensions.UnitTests.Interface
 {
-#if !SKIP_TESTS
     public sealed class WhenReferenceMethod
     {
         [Fact]
@@ -21,5 +20,4 @@ namespace ImportExtensions.UnitTests.Interface
 #endif
         }
     }
-#endif
 }

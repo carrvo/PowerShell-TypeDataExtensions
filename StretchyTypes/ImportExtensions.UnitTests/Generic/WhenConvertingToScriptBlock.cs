@@ -6,7 +6,6 @@ using Xunit;
 
 namespace ImportExtensions.UnitTests.Generic
 {
-#if !SKIP_TESTS
     public sealed class WhenConvertingToScriptBlock
     {
         public MethodInfo ExtensionMethod { get; set; }
@@ -36,5 +35,4 @@ namespace ImportExtensions.UnitTests.Generic
             str.Should().Be($"Hello {nameof(ShouldBeCallable)} from {nameof(ExampleClassExtensions.ExtensionMethod)} with {typeof(int).Name}");
         }
     }
-#endif
 }
