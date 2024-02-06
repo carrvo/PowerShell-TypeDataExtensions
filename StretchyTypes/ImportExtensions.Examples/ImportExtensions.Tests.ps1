@@ -5,6 +5,7 @@ Describe "ImportExtensions" {
 		switch ($PSVersionTable.PSVersion.Major) {
 			7 {Import-Extensions -Path '..\bin\Debug\net7.0\ImportExtensions.UnitTests.dll'}
 			5 {Import-Extensions -Path '..\bin\Debug\net48\ImportExtensions.UnitTests.dll'}
+			default {Import-Extensions -Path '..\bin\Debug\netstandard2.0\ImportExtensions.UnitTests.dll'}
 		}
 
 		It "Updates TypeData for Concrete Extension" {
