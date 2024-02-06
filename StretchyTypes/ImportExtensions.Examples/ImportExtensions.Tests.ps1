@@ -1,10 +1,10 @@
-using module .\bin\Debug\StretchyTypes.psd1
+using module ..\bin\Debug\StretchyTypes.psd1
 
 Describe "ImportExtensions" {
 	Context "When Importing" {
 		switch ($PSVersionTable.PSVersion.Major) {
-			7 {Import-Extensions -Path '.\bin\Debug\net7.0\ImportExtensions.UnitTests.dll'}
-			5 {Import-Extensions -Path '.\bin\Debug\net48\ImportExtensions.UnitTests.dll'}
+			7 {Import-Extensions -Path '..\bin\Debug\net7.0\ImportExtensions.UnitTests.dll'}
+			5 {Import-Extensions -Path '..\bin\Debug\net48\ImportExtensions.UnitTests.dll'}
 		}
 
 		It "Updates TypeData for Concrete Extension" {
