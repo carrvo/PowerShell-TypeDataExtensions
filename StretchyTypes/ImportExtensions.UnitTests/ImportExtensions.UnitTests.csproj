@@ -22,9 +22,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-	<!-- Kudos to https://stackoverflow.com/a/51736216 -->
-	<PackageReference Include="Microsoft.PowerShell.SDK" Version="7.1.3" />
   </ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+		<!-- Kudos to https://stackoverflow.com/a/51736216 -->
+		<PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.1.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+		<!-- Kudos to https://stackoverflow.com/a/51736216 -->
+		<PackageReference Include="Microsoft.PowerShell.SDK" Version="7.1.3" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ImportExtensions\ImportExtensions.csproj" />
