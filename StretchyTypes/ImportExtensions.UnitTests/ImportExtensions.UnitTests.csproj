@@ -38,4 +38,8 @@
     <ProjectReference Include="..\ImportExtensions\ImportExtensions.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="pwsh -WorkingDirectory .. -Command Invoke-Pester" />
+  </Target>
+
 </Project>

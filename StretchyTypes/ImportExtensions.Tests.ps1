@@ -1,9 +1,6 @@
-Describe "ImportExtensions" {
-	switch ($PSVersionTable.PSVersion.Major) {
-		7 {Import-Module .\bin\Debug\net7.0\StretchyTypes.psd1}
-		5 {Import-Module .\bin\Debug\net48\StretchyTypes.psd1}
-	}
+using module .\bin\Debug\StretchyTypes.psd1
 
+Describe "ImportExtensions" {
 	Context "When Importing" {
 		switch ($PSVersionTable.PSVersion.Major) {
 			7 {Import-Extensions -Path '.\bin\Debug\net7.0\ImportExtensions.UnitTests.dll'}

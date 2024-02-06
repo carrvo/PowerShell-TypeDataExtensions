@@ -9,7 +9,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = 'ImportExtensions.dll'
+RootModule = if($PSEdition -eq 'Core') {'net7.0\ImportExtensions.dll'} elseif ($PSEdition -eq 'Desktop') {'net48\ImportExtensions.dll'} else {'net48\ImportExtensions.dll'}
 
 # Version number of this module.
 ModuleVersion = '0.0.2'
@@ -54,7 +54,7 @@ PowerShellVersion = if($PSEdition -eq 'Core') {'7.0'} elseif ($PSEdition -eq 'De
 # RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-RequiredAssemblies = 'ImportExtensions.dll'
+RequiredAssemblies = if($PSEdition -eq 'Core') {'net7.0\ImportExtensions.dll'} elseif ($PSEdition -eq 'Desktop') {'net48\ImportExtensions.dll'} else {'net48\ImportExtensions.dll'}
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
 # ScriptsToProcess = @()
