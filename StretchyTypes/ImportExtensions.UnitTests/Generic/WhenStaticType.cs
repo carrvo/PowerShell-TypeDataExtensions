@@ -3,6 +3,7 @@ using Xunit;
 
 namespace ImportExtensions.UnitTests.Generic
 {
+#if !SKIP_TESTS
     public sealed class WhenStaticType
     {
         [Fact]
@@ -18,4 +19,5 @@ namespace ImportExtensions.UnitTests.Generic
 #endif
         }
     }
+#endif
 }

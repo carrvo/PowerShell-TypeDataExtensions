@@ -4,6 +4,7 @@ using Xunit;
 
 namespace ImportExtensions.UnitTests.Concrete
 {
+#if !SKIP_TESTS
     public sealed class WhenExtensionMethod
     {
         [Fact]
@@ -20,4 +21,5 @@ namespace ImportExtensions.UnitTests.Concrete
 #endif
         }
     }
+#endif
 }
