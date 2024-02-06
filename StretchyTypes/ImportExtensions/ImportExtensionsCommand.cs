@@ -55,8 +55,8 @@ namespace ImportExtensions
                 try
                 {
                     WriteVerbose($"Extension Method found: `{extension.DeclaringType?.FullName}.{extension.Name}`");
-                    var scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
-                    var parameterType = extension.GetParameters().First().ParameterType;
+                    ScriptBlock scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
+                    Type parameterType = extension.GetParameters().First().ParameterType;
                     WriteVerbose($"Update-TypeData -TypeName {parameterType} -MemberType ScriptMethod -MemberName {extension.Name} -Value {{{scriptBlock}}} {String.Join(" ", bound.Select(x => $"-{x.Key} {x.Value}"))}");
                     InvokeCommand.InvokeScript(@"
     Param($ParameterType, $StaticMethod, $ScriptBlock, $Bound)
