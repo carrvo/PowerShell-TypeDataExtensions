@@ -1,8 +1,8 @@
-using module .\bin\Debug\net7.0\StretchyTypes.psd1
+using module .\bin\Debug\netstandard2.0\StretchyTypes.psd1
 
 Describe "ImportExtensions" {
 	Context "When Importing" {
-		Import-Extensions -Path '.\bin\Debug\net7.0\ImportExtensions.UnitTests.dll'
+		Import-Extensions -Path '.\bin\Debug\netstandard2.0\ImportExtensions.UnitTests.dll'
 
 		It "Updates TypeData for Concrete Extension" {
 			Get-TypeData -TypeName ImportExtensions.UnitTests.ExampleClass |
