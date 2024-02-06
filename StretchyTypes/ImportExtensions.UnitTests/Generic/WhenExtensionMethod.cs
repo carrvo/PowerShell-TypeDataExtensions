@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.Reflection;
 using Xunit;
 
 namespace ImportExtensions.UnitTests.Generic
@@ -8,7 +9,15 @@ namespace ImportExtensions.UnitTests.Generic
         [Fact]
         public void ShouldBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionMethod(typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.ExtensionMethod))).Should().BeTrue();
+            MethodInfo method = typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.ExtensionMethod));
+            ImportExtensionsCommand
+                .IsExtensionMethod(method)
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeTrue();
+#else
+                .Be(true);
+#endif
         }
     }
 }

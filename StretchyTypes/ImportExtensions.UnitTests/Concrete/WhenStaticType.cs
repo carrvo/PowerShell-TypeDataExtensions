@@ -8,13 +8,27 @@ namespace ImportExtensions.UnitTests.Concrete
         [Fact]
         public void ShouldBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionClass(typeof(ExampleClassExtensions)).Should().BeTrue();
+            ImportExtensionsCommand
+                .IsExtensionClass(typeof(ExampleClassExtensions))
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeTrue();
+#else
+                .Be(true);
+#endif
         }
 
         [Fact]
         public void ShouldNotBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionClass(typeof(ExampleStatic)).Should().BeFalse();
+            ImportExtensionsCommand
+                .IsExtensionClass(typeof(ExampleStatic))
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
     }
 }

@@ -8,7 +8,14 @@ namespace ImportExtensions.UnitTests.Interface
         [Fact]
         public void ShouldNotBeStatic()
         {
-            ImportExtensionsCommand.IsExtensionClass(typeof(IExampleClass)).Should().BeFalse();
+            ImportExtensionsCommand
+                .IsExtensionClass(typeof(IExampleClass))
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
     }
 }

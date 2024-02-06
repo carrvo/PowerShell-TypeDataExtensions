@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.Reflection;
 using Xunit;
 
 namespace ImportExtensions.UnitTests.Generic
@@ -8,19 +9,43 @@ namespace ImportExtensions.UnitTests.Generic
         [Fact]
         public void FromReferenceType_ShouldNotBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionMethod(typeof(ExampleClass<int>).GetMethod(nameof(ExampleClass<int>.StaticMethod))).Should().BeFalse();
+            MethodInfo method = typeof(ExampleClass<int>).GetMethod(nameof(ExampleClass<int>.StaticMethod));
+            ImportExtensionsCommand
+                .IsExtensionMethod(method)
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
 
         [Fact]
         public void FromStaticType_ShouldNotBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionMethod(typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.StaticMethod))).Should().BeFalse();
+            MethodInfo method = typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.StaticMethod));
+            ImportExtensionsCommand
+                .IsExtensionMethod(method)
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
 
         [Fact]
         public void FromStaticGeneric_ShouldNotBeExtension()
         {
-            ImportExtensionsCommand.IsExtensionMethod(typeof(ExampleStatic<int>).GetMethod(nameof(ExampleStatic<int>.StaticMethod))).Should().BeFalse();
+            MethodInfo method = typeof(ExampleStatic<int>).GetMethod(nameof(ExampleStatic<int>.StaticMethod));
+            ImportExtensionsCommand
+                .IsExtensionMethod(method)
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeFalse();
+#else
+                .Be(false);
+#endif
         }
     }
 }
