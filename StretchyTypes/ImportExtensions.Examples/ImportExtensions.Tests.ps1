@@ -1,4 +1,4 @@
-using module .\bin\Debug\netstandard2.0\StretchyTypes.psd1
+using module ..\bin\Debug\netstandard2.0\StretchyTypes.psd1
 
 Describe "ImportExtensions" {
 	Context "When Importing" {
