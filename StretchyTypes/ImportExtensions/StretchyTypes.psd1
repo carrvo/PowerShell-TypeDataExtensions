@@ -33,7 +33,7 @@ Copyright = '(c) carrvo. All rights reserved.'
 Description = 'Loads and converts .NET extension methods into TypeData'
 
 # Minimum version of the PowerShell engine required by this module
-PowerShellVersion = '7.0'
+PowerShellVersion = if($PSEdition -eq 'Core') {'7.0'} elseif ($PSEdition -eq 'Desktop') {'5.1'} else {'5.1'}
 
 # Name of the PowerShell host required by this module
 # PowerShellHostName = ''
