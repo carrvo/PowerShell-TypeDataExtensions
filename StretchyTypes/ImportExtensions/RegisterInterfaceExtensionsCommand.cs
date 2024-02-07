@@ -41,14 +41,7 @@ namespace ImportExtensions
             InvocationParameters.Remove(nameof(Interface));
             InvocationParameters.Remove(nameof(Concrete));
 
-            WriteVerbose($"Finding TypeData for: `{Interface.FullName}`");
-            InterfaceTypeData = InvokeCommand.InvokeScript(@"
-                    Param($GenericType, $Bound)
-                    Get-TypeData @Bound |
-                        Where-Object TypeName -EQ $GenericType.FullName
-                ", Interface, InvocationParameters)
-                .FirstOrDefault()
-                ?.BaseObject as TypeData;
+            InterfaceTypeData = this.GetTypeData(Interface, InvocationParameters);
 
             if (InterfaceTypeData is null)
             {
@@ -68,11 +61,7 @@ namespace ImportExtensions
                     .Where(x => x.Value.GetType() == typeof(ScriptMethodData))
                     .Select(x => (Name: x.Key, Data: x.Value as ScriptMethodData)))
                 {
-                    WriteVerbose($"Update-TypeData -TypeName {Concrete} -MemberType ScriptMethod -MemberName {memberdata.Name} -Value {{{memberdata.Data?.Script}}} {String.Join(" ", InvocationParameters.Select(x => $"-{x.Key} {x.Value}"))}");
-                    InvokeCommand.InvokeScript(@"
-    Param($ParameterType, $Name, $ScriptBlock, $Bound)
-    Update-TypeData -TypeName $ParameterType.ToString() -MemberType ScriptMethod -MemberName $Name -Value $ScriptBlock @Bound
-", Concrete, memberdata.Name, memberdata.Data?.Script, InvocationParameters);
+                    this.UpdateTypeData(Concrete, memberdata.Name, memberdata.Data?.Script, InvocationParameters);
                 }
             }
             catch (Exception ex)

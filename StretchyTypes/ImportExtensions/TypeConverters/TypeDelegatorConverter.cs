@@ -44,6 +44,8 @@ namespace ImportExtensions.TypeConverters
                 var potentialTypes = AppDomain
                     .CurrentDomain
                     .GetAssemblies()
+                    // Kudos to https://stackoverflow.com/a/43675843
+                    .Where(p => !p.IsDynamic) // Needed for PowerShell 5
                     .SelectMany(assembly => assembly.ExportedTypes)
                     .Where(expType => expType.ToString() == typeName || typeRegex.IsMatch(expType.ToString()));
                 // find best match

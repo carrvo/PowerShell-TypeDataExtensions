@@ -44,14 +44,7 @@ namespace ImportExtensions
             InvocationParameters.Remove(nameof(Generic));
             InvocationParameters.Remove(nameof(Specific));
 
-            WriteVerbose($"Finding TypeData for: `{Generic.FullName}`");
-            GenericTypeData = InvokeCommand.InvokeScript(@"
-                    Param($GenericType, $Bound)
-                    Get-TypeData @Bound |
-                        Where-Object TypeName -EQ $GenericType.FullName
-                ", Generic, InvocationParameters)
-                .FirstOrDefault()
-                ?.BaseObject as TypeData;
+            GenericTypeData = this.GetTypeData(Generic, InvocationParameters);
 
             if (GenericTypeData is null)
             {
@@ -79,11 +72,7 @@ namespace ImportExtensions
                     .Where(x => x.Value.GetType() == typeof(ScriptMethodData))
                     .Select(x => (Name: x.Key, Data: x.Value as ScriptMethodData)))
                 {
-                    WriteVerbose($"Update-TypeData -TypeName {newType} -MemberType ScriptMethod -MemberName {memberdata.Name} -Value {{{memberdata.Data?.Script}}} {String.Join(" ", InvocationParameters.Select(x => $"-{x.Key} {x.Value}"))}");
-                    InvokeCommand.InvokeScript(@"
-    Param($ParameterType, $Name, $ScriptBlock, $Bound)
-    Update-TypeData -TypeName $ParameterType.ToString() -MemberType ScriptMethod -MemberName $Name -Value $ScriptBlock @Bound
-", newType, memberdata.Name, memberdata.Data?.Script, InvocationParameters);
+                    this.UpdateTypeData(newType, memberdata.Name, memberdata.Data?.Script, InvocationParameters);
                 }
             }
             catch (Exception ex)
