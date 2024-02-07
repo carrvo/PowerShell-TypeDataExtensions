@@ -48,5 +48,10 @@ namespace ImportExtensions.UnitTests
         {
             return $"Hello {name} from {nameof(ExtensionIMethod)}";
         }
+
+        public static string ExtensionProperty(this ExampleClass example)
+        {
+            return $"Hello from {nameof(ExtensionProperty)}";
+        }
     }
 }
