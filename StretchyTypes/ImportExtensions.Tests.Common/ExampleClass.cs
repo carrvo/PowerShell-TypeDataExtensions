@@ -6,7 +6,7 @@ namespace ImportExtensions.UnitTests
     {
         string Method(string name);
     }
-    public sealed class ExampleClass : IExampleClass
+    public class ExampleClass : IExampleClass
     {
         public string Method(string name)
         {

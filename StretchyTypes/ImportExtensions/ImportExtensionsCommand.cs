@@ -56,7 +56,7 @@ namespace ImportExtensions
                 {
                     WriteVerbose($"Extension Method found: `{extension.DeclaringType?.FullName}.{extension.Name}`");
                     ScriptBlock scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
-                    Type parameterType = extension.GetParameters().First().ParameterType;
+                    Type parameterType = GetExtensionParameter(extension);
                     this.UpdateTypeData(parameterType, extension.Name, scriptBlock, bound);
                 }
                 catch (Exception ex)
@@ -77,6 +77,14 @@ namespace ImportExtensions
         internal static bool IsExtensionClass(Type type)
         {
             return type.IsDefined(typeof(ExtensionAttribute), false); // type.GetConstructors().Length == 0;
+        }
+
+        internal static Type GetExtensionParameter(MethodInfo extension)
+        {
+            var parameterType = extension.GetParameters().First().ParameterType;
+            return parameterType.IsGenericParameter
+                ? parameterType.BaseType
+                : parameterType;
         }
 
         internal String ToScriptBlock(MethodInfo staticMethod)

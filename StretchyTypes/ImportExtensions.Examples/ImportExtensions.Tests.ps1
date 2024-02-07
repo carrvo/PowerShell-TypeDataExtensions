@@ -9,7 +9,6 @@ Describe "ImportExtensions" {
 				Select-Object -ExpandProperty Members |
 				Select-Object -ExpandProperty Keys |
 				Should -Contain "ExtensionMethod"
-				Should -Be "ExtensionMethod"
 		}
 
 		It "Maps Concrete Extension" {
@@ -33,7 +32,7 @@ Describe "ImportExtensions" {
 
 		Register-GenericExtensions -Generic ImportExtensions.UnitTests.Generic.ExampleClass -Specific int
 
-		It "Updates TypeData for Generic Extension" {
+		It "Updates TypeData for Generic Type Extension" {
 			Get-TypeData |
 				Where-Object TypeName -Match ImportExtensions.UnitTests.Generic.ExampleClass |
 				Select-Object -ExpandProperty Members |
@@ -41,9 +40,24 @@ Describe "ImportExtensions" {
 				Should -Contain "ExtensionMethod"
 		}
 
-		It "Maps Generic Extension" {
+		It "Maps Generic Type Extension" {
 			$example = New-Object ImportExtensions.UnitTests.Generic.ExampleClass[int]
 			$example.ExtensionMethod("me") | Should -Be "Hello me from ExtensionMethod with Int32"
+		}
+		
+		Register-ObjectExtensions -Concrete ImportExtensions.UnitTests.ExampleClass
+
+		It "Updates TypeData for Generic Extension" {
+			Get-TypeData |
+				Where-Object TypeName -Match ImportExtensions.UnitTests.ExampleClass |
+				Select-Object -ExpandProperty Members |
+				Select-Object -ExpandProperty Keys |
+				Should -Contain "GenericMethod"
+		}
+
+		It "Maps Generic Extension" {
+			$example = New-Object ImportExtensions.UnitTests.ExampleClass
+			$example.GenericMethod("me") | Should -Be "Hello me from GenericMethod with ExampleClass"
 		}
 	}
 }

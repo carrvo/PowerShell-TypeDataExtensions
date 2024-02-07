@@ -46,5 +46,16 @@
         {
             return $"Hello {name} from {nameof(ExtensionIMethod)} with {typeof(T).Name}";
         }
+
+        public static string GenericMethod<T>(this T example, string name)
+            where T : ExampleClass
+        {
+            return $"Hello {name} from {nameof(GenericMethod)} with {typeof(T).Name}";
+        }
+
+        public static string UnboundMethod<T>(this T example, string name)
+        {
+            return $"Hello {name} from {nameof(UnboundMethod)} with {typeof(T).Name}";
+        }
     }
 }
