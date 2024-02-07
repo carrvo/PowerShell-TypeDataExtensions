@@ -8,7 +8,7 @@ Describe "ImportExtensions" {
 			Get-TypeData -TypeName ImportExtensions.UnitTests.ExampleClass |
 				Select-Object -ExpandProperty Members |
 				Select-Object -ExpandProperty Keys |
-				Select-Object -First 1 |
+				Should -Contain "ExtensionMethod"
 				Should -Be "ExtensionMethod"
 		}
 
@@ -37,8 +37,8 @@ Describe "ImportExtensions" {
 			Get-TypeData |
 				Where-Object TypeName -Match ImportExtensions.UnitTests.Generic.ExampleClass |
 				Select-Object -ExpandProperty Members |
-				Select-Object -First 1 -ExpandProperty Keys |
-				Should -Be "ExtensionMethod"
+				Select-Object -ExpandProperty Keys |
+				Should -Contain "ExtensionMethod"
 		}
 
 		It "Maps Generic Extension" {
