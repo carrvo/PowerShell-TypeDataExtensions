@@ -12,9 +12,9 @@ namespace ImportExtensions
     /// <para type="synopsis"></para>
     /// <para type="description"></para>
     /// </summary>
-    [Cmdlet(VerbsLifecycle.Register, "InterfaceExtensions")]
-    [Alias("Expand-InterfaceExtensions")]
-    public sealed class RegisterInterfaceExtensionsCommand : PSCmdlet
+    [Cmdlet(VerbsCommon.Copy, "Extensions")]
+    [Alias("Register-Extensions")]
+    public sealed class CopyExtensionsCommand : PSCmdlet
     {
         internal const String ExtensionErrorId = "Register Extension Error";
 
@@ -22,30 +22,29 @@ namespace ImportExtensions
         /// <para type="synopsis"></para>
         /// </summary>
         [Parameter(Mandatory = true)]
-        [ValidateInterfaceType]
-        public Type Interface { get; set; }
+        public Type From { get; set; }
 
         /// <summary>
         /// <para type="synopsis"></para>
         /// </summary>
         [Parameter(Mandatory = true, ValueFromPipeline = true)]
-        public Type Concrete { get; set; }
+        public Type To { get; set; }
 
         private Dictionary<String, Object> InvocationParameters { get; set; }
-        private TypeData InterfaceTypeData { get; set; }
+        private TypeData FromTypeData { get; set; }
 
         /// <inheritdoc/>
         protected override void BeginProcessing()
         {
             InvocationParameters = MyInvocation.BoundParameters.ToDictionary(entry => entry.Key, entry => entry.Value);
-            InvocationParameters.Remove(nameof(Interface));
-            InvocationParameters.Remove(nameof(Concrete));
+            InvocationParameters.Remove(nameof(From));
+            InvocationParameters.Remove(nameof(To));
 
-            InterfaceTypeData = this.GetTypeData(Interface, InvocationParameters);
+            FromTypeData = this.GetTypeData(From, InvocationParameters);
 
-            if (InterfaceTypeData is null)
+            if (FromTypeData is null)
             {
-                ThrowTerminatingError(new ErrorRecord(new ArgumentException("No TypeData found!"), ExtensionErrorId, ErrorCategory.InvalidArgument, Interface));
+                ThrowTerminatingError(new ErrorRecord(new ArgumentException("No TypeData found!"), ExtensionErrorId, ErrorCategory.InvalidArgument, From));
             }
         }
 
@@ -54,19 +53,20 @@ namespace ImportExtensions
         {
             try
             {
-                WriteVerbose($"Creating TypeData for: `{Concrete}`");
+                WriteVerbose($"Creating TypeData for: `{To}`");
+                WriteWarning($"No validation is done to see if the extensions from `{From}` applies to `{To}`!");
 
-                foreach (var memberdata in InterfaceTypeData
+                foreach (var memberdata in FromTypeData
                     .Members
                     .Where(x => x.Value.GetType() == typeof(ScriptMethodData))
                     .Select(x => (Name: x.Key, Data: x.Value as ScriptMethodData)))
                 {
-                    this.UpdateTypeData(Concrete, memberdata.Name, memberdata.Data?.Script, InvocationParameters);
+                    this.UpdateTypeData(To, memberdata.Name, memberdata.Data?.Script, InvocationParameters);
                 }
             }
             catch (Exception ex)
             {
-                WriteError(new ErrorRecord(ex, ExtensionErrorId, ErrorCategory.NotSpecified, Concrete));
+                WriteError(new ErrorRecord(ex, ExtensionErrorId, ErrorCategory.NotSpecified, To));
             }
         }
     }

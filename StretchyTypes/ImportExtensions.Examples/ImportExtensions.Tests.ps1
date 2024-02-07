@@ -16,7 +16,7 @@ Describe "ImportExtensions" {
 			$example.ExtensionMethod("me") | Should -Be "Hello me from ExtensionMethod"
 		}
 
-		Register-InterfaceExtensions -Interface ImportExtensions.UnitTests.IExampleClass -Concrete ImportExtensions.UnitTests.ExampleClass
+		Copy-Extensions -From ImportExtensions.UnitTests.IExampleClass -To ImportExtensions.UnitTests.ExampleClass
 
 		It "Updates TypeData for Interface Extension" {
 			Get-TypeData -TypeName ImportExtensions.UnitTests.IExampleClass |
@@ -45,7 +45,7 @@ Describe "ImportExtensions" {
 			$example.ExtensionMethod("me") | Should -Be "Hello me from ExtensionMethod with Int32"
 		}
 		
-		Register-ObjectExtensions -Concrete ImportExtensions.UnitTests.ExampleClass
+		Copy-Extensions -From System.Object -To ImportExtensions.UnitTests.ExampleClass
 
 		It "Updates TypeData for Generic Extension" {
 			Get-TypeData |
