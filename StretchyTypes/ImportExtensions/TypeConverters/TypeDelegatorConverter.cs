@@ -47,7 +47,7 @@ namespace ImportExtensions.TypeConverters
                     // Kudos to https://stackoverflow.com/a/43675843
                     .Where(p => !p.IsDynamic) // Needed for PowerShell 5
                     .SelectMany(assembly => assembly.ExportedTypes)
-                    .Where(expType => expType.ToString() == typeName || typeRegex.IsMatch(expType.ToString()));
+                    .Where(expType => expType.ToPSType() == typeName || typeRegex.IsMatch(expType.ToPSType()));
                 // find best match
                 var bestMatch = potentialTypes.FirstOrDefault(potType => potType.Name == shortName) ?? potentialTypes.First();
                 return new GenericType(bestMatch);

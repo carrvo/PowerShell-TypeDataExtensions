@@ -58,14 +58,14 @@ namespace ImportExtensions
             Type newType = default;
             try
             {
-                WriteVerbose($"Determining type from `{Generic}` combined with: `{String.Join("`, `", Specific.Select(x => x.ToString()))}`");
+                WriteVerbose($"Determining type from [{Generic.ToPSType()}] combined with: [{String.Join("], [", Specific.Select(x => x.ToPSType()))}]");
                 newType = Generic.MakeGenericType(Specific);
                 if (newType is null)
                 {
                     WriteError(new ErrorRecord(new ArgumentException("Could not generate specific type!"), ExtensionErrorId, ErrorCategory.InvalidArgument, Specific));
                     return;
                 }
-                WriteVerbose($"Creating TypeData for: `{newType}`");
+                WriteVerbose($"Creating TypeData for: [{newType.ToPSType()}]");
 
                 foreach (var memberdata in GenericTypeData
                     .Members

@@ -53,8 +53,8 @@ namespace ImportExtensions
         {
             try
             {
-                WriteVerbose($"Creating TypeData for: `{To}`");
-                WriteWarning($"No validation is done to see if the extensions from `{From}` applies to `{To}`!");
+                WriteVerbose($"Creating TypeData for: [{To.ToPSType()}]");
+                WriteWarning($"No validation is done to see if the extensions from [{From.ToPSType()}] applies to [{To.ToPSType()}]!");
 
                 foreach (var memberdata in FromTypeData
                     .Members

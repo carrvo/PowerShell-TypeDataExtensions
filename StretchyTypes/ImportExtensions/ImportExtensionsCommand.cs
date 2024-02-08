@@ -54,9 +54,9 @@ namespace ImportExtensions
             {
                 try
                 {
-                    WriteVerbose($"Extension Method found: `{extension.DeclaringType?.FullName}.{extension.Name}`");
+                    WriteVerbose($"Extension Method found: [{extension.DeclaringType?.FullName}]::{extension.Name}");
                     ScriptBlock scriptBlock = InvokeCommand.NewScriptBlock(ToScriptBlock(extension));
-                    Type parameterType = GetExtensionParameter(extension);
+                    Type parameterType = extension.GetParameters().First().ParameterType;
                     this.UpdateTypeData(parameterType, extension.Name, scriptBlock, bound);
                 }
                 catch (Exception ex)
@@ -79,14 +79,6 @@ namespace ImportExtensions
             return type.IsDefined(typeof(ExtensionAttribute), false); // type.GetConstructors().Length == 0;
         }
 
-        internal static Type GetExtensionParameter(MethodInfo extension)
-        {
-            var parameterType = extension.GetParameters().First().ParameterType;
-            return parameterType.IsGenericParameter
-                ? parameterType.BaseType
-                : parameterType;
-        }
-
         internal String ToScriptBlock(MethodInfo staticMethod)
         {
             StringBuilder command = new StringBuilder();
@@ -96,9 +88,7 @@ namespace ImportExtensions
             String parameterTypeName = String.Empty;
             foreach (var parameterInfo in staticMethod.GetParameters().Skip(1))
             {
-                parameterTypeName = String.IsNullOrEmpty(parameterInfo.ParameterType.FullName)
-                    ? parameterInfo.ParameterType.ToString()
-                    : parameterInfo.ParameterType.FullName;
+                parameterTypeName = parameterInfo.ParameterType.ToPSType();
                 command.AppendLine($"  [{parameterTypeName}] ${parameterInfo.Name},");
                 arguments.Add($"${parameterInfo.Name}");
             }

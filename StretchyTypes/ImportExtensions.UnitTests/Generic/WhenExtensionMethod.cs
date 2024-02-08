@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using System.Linq.Expressions;
+using System.Linq;
 using System.Reflection;
 using Xunit;
 
@@ -18,6 +20,14 @@ namespace ImportExtensions.UnitTests.Generic
 #else
                 .Be(true);
 #endif
+
+            method
+                .GetParameters()
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be($"{typeof(ExampleClass<int>).Namespace}.ExampleClass[T]");
         }
 
         [Fact]
@@ -32,6 +42,14 @@ namespace ImportExtensions.UnitTests.Generic
 #else
                 .Be(true);
 #endif
+
+            method
+                .GetParameters()
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be($"{typeof(UnitTests.ExampleClass).Namespace}.ExampleClass");
         }
 
         [Fact]
@@ -46,6 +64,37 @@ namespace ImportExtensions.UnitTests.Generic
 #else
                 .Be(true);
 #endif
+
+            method
+                .GetParameters()
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be("System.Object");
+        }
+
+        [Fact]
+        public void Complex_ShouldBeExtension()
+        {
+            MethodInfo method = typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.Complex));
+            ImportExtensionsCommand
+                .IsExtensionMethod(method)
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeTrue();
+#else
+                .Be(true);
+#endif
+
+            method
+                .GetParameters()
+                .Skip(1)
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be($"{typeof(Expression).Namespace}.Expression[System.Func[T,System.Object]]");
         }
     }
 }

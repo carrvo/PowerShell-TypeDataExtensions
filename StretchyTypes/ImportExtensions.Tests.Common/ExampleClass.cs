@@ -1,4 +1,6 @@
 ﻿using ImportExtensions.UnitTests.Generic;
+using System.Linq.Expressions;
+using System;
 
 namespace ImportExtensions.UnitTests
 {
@@ -52,6 +54,11 @@ namespace ImportExtensions.UnitTests
         public static string ExtensionProperty(this ExampleClass example)
         {
             return $"Hello from {nameof(ExtensionProperty)}";
+        }
+
+        public static string ExtensionReference(this  ExampleClass example, ref string name)
+        {
+            return $"Hello {name} from {nameof(ExtensionReference)}";
         }
     }
 }

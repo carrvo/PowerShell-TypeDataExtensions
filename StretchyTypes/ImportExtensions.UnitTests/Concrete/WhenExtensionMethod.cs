@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Xunit;
 
@@ -18,6 +20,14 @@ namespace ImportExtensions.UnitTests.Concrete
 #else
                 .Be(true);
 #endif
+
+            method
+                .GetParameters()
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be($"{typeof(ExampleClass).Namespace}.ExampleClass");
         }
 
         [Fact]
@@ -32,6 +42,50 @@ namespace ImportExtensions.UnitTests.Concrete
 #else
                 .Be(true);
 #endif
+
+            method
+                .GetParameters()
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be($"{typeof(ExampleClass).Namespace}.ExampleClass");
+
+            method
+                .GetParameters()
+                .Should()
+                .HaveCount(1);
+        }
+
+        [Fact]
+        public void Reference_ShouldBeExtension()
+        {
+            MethodInfo method = typeof(ExampleClassExtensions).GetMethod(nameof(ExampleClassExtensions.ExtensionReference));
+            ImportExtensionsCommand
+                .IsExtensionMethod(method)
+                .Should()
+#if NET7_0_OR_GREATER
+                .BeTrue();
+#else
+                .Be(true);
+#endif
+
+            method
+                .GetParameters()
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be($"{typeof(ExampleClass).Namespace}.ExampleClass");
+
+            method
+                .GetParameters()
+                .Skip(1)
+                .First()
+                .ParameterType
+                .ToPSType()
+                .Should()
+                .Be("ref");
         }
     }
 }

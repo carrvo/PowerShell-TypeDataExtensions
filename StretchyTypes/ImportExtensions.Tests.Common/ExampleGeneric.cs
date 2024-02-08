@@ -1,4 +1,7 @@
-﻿namespace ImportExtensions.UnitTests.Generic
+﻿using System.Linq.Expressions;
+using System;
+
+namespace ImportExtensions.UnitTests.Generic
 {
     public interface IExampleClass<T>
     {
@@ -56,6 +59,11 @@
         public static string UnboundMethod<T>(this T example, string name)
         {
             return $"Hello {name} from {nameof(UnboundMethod)} with {typeof(T).Name}";
+        }
+
+        public static string Complex<T>(this T example, Expression<Func<T, Object>> field)
+        {
+            return $"Hello from {nameof(Complex)}";
         }
     }
 }
