@@ -32,24 +32,31 @@ namespace ImportExtensions
 
         internal static String ToRecursivePSType(this Type type)
         {
-            if (type.IsByRef)
+            try
             {
-                return "ref";
-            }
+                if (type.IsByRef)
+                {
+                    return "ref";
+                }
 
-            if (type.IsGenericParameter)
+                if (type.IsGenericParameter)
+                {
+                    type = type.BaseType;
+                }
+
+                if (type.IsGenericType)
+                {
+                    var typeStr = $"{type.Namespace}.{GenericTypeNameTrimmer.Replace(type.Name, String.Empty)}";
+                    var genericArguments = type.GenericTypeArguments.Select(x => x.ToRecursivePSType());
+                    return $"{typeStr}[{String.Join(",", genericArguments)}]";
+                }
+
+                return type.FullName;
+            }
+            catch (StackOverflowException)
             {
-                type = type.BaseType;
+                return type.ToPSType();
             }
-
-            if (type.IsGenericType)
-            {
-                var typeStr = $"{type.Namespace}.{GenericTypeNameTrimmer.Replace(type.Name, String.Empty)}";
-                var genericArguments = type.GenericTypeArguments.Select(x => x.ToRecursivePSType());
-                return $"{typeStr}[{String.Join(",", genericArguments)}]";
-            }
-
-            return type.FullName;
         }
     }
 }
