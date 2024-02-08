@@ -93,9 +93,13 @@ namespace ImportExtensions
             IList<String> arguments = new List<String>();
 
             command.AppendLine("Param( "); // extra space so if no arguments then will be removed instead of final comma `,`
+            String parameterTypeName = String.Empty;
             foreach (var parameterInfo in staticMethod.GetParameters().Skip(1))
             {
-                command.AppendLine($"  [{parameterInfo.ParameterType.FullName}] ${parameterInfo.Name},");
+                parameterTypeName = String.IsNullOrEmpty(parameterInfo.ParameterType.FullName)
+                    ? parameterInfo.ParameterType.ToString()
+                    : parameterInfo.ParameterType.FullName;
+                command.AppendLine($"  [{parameterTypeName}] ${parameterInfo.Name},");
                 arguments.Add($"${parameterInfo.Name}");
             }
             command.Remove(command.Length - Environment.NewLine.Length - 1, 1); // remove final comma `,`
