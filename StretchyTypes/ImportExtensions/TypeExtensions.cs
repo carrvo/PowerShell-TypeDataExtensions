@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ImportExtensions
@@ -34,24 +34,40 @@ namespace ImportExtensions
         {
             try
             {
-                if (type.IsByRef)
+                var typeStr = new StringBuilder();
+                void ConvertToPSType(Type convert)
                 {
-                    return "ref";
-                }
+                    if (convert.IsByRef)
+                    {
+                        typeStr.Append("ref");
+                        return;
+                    }
 
-                if (type.IsGenericParameter)
-                {
-                    type = type.BaseType;
-                }
+                    if (convert.IsGenericParameter)
+                    {
+                        convert = convert.BaseType;
+                    }
 
-                if (type.IsGenericType)
-                {
-                    var typeStr = $"{type.Namespace}.{GenericTypeNameTrimmer.Replace(type.Name, String.Empty)}";
-                    var genericArguments = type.GenericTypeArguments.Select(x => x.ToRecursivePSType());
-                    return $"{typeStr}[{String.Join(",", genericArguments)}]";
-                }
+                    if (convert.IsGenericType)
+                    {
+                        typeStr.Append(convert.Namespace);
+                        typeStr.Append(".");
+                        typeStr.Append(GenericTypeNameTrimmer.Replace(convert.Name, String.Empty));
+                        typeStr.Append("[");
+                        foreach (var genericArgument in convert.GenericTypeArguments)
+                        {
+                            ConvertToPSType(genericArgument);
+                            typeStr.Append(",");
+                        }
+                        typeStr.Remove(typeStr.Length - 1, 1); // remove final comma `,`
+                        typeStr.Append("]");
+                        return;
+                    }
 
-                return type.FullName;
+                    typeStr.Append(convert.FullName);
+                }
+                ConvertToPSType(type);
+                return typeStr.ToString();
             }
             catch (StackOverflowException)
             {
