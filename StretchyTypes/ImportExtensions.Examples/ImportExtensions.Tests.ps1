@@ -74,5 +74,11 @@ Describe "ImportExtensions" {
 			$example = New-Object ImportExtensions.UnitTests.ExampleClass
 			$example.UnboundMethod("me") | Should -Be "Hello me from UnboundMethod with ExampleClass"
 		}
+
+		It "Maps Complex Extension" {
+			$example = New-Object ImportExtensions.UnitTests.ExampleClass
+			[System.Func[System.Object,System.Object]]$argument = {"me"}
+			$example.Complex($argument) | Should -Be "Hello from Complex"
+		}
 	}
 }

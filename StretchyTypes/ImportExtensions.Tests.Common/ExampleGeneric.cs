@@ -61,7 +61,7 @@ namespace ImportExtensions.UnitTests.Generic
             return $"Hello {name} from {nameof(UnboundMethod)} with {typeof(T).Name}";
         }
 
-        public static string Complex<T>(this T example, Expression<Func<T, Object>> field)
+        public static string Complex<T>(this T example, Func<T, Object> field)
         {
             return $"Hello from {nameof(Complex)}";
         }

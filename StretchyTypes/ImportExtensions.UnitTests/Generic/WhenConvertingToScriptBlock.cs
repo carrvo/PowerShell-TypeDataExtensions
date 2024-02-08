@@ -43,7 +43,7 @@ namespace ImportExtensions.UnitTests.Generic
             extensionMethod.Should().NotBeNull();
 
             var scriptBlock = ScriptBlock.Create(Sut.ToScriptBlock(extensionMethod));
-            Expression<Func<int, Object>> expression = x => x;
+            Func<Object, Object> expression = x => x;
             var output = scriptBlock.Invoke(expression).Single().BaseObject;
 
             output.Should().BeOfType<string>();

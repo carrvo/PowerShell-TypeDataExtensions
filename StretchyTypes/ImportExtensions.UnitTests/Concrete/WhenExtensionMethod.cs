@@ -83,7 +83,7 @@ namespace ImportExtensions.UnitTests.Concrete
                 .Skip(1)
                 .First()
                 .ParameterType
-                .ToPSType()
+                .ToRecursivePSType()
                 .Should()
                 .Be("ref");
         }

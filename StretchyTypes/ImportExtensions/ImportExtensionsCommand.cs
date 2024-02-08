@@ -88,7 +88,7 @@ namespace ImportExtensions
             String parameterTypeName = String.Empty;
             foreach (var parameterInfo in staticMethod.GetParameters().Skip(1))
             {
-                parameterTypeName = parameterInfo.ParameterType.ToPSType();
+                parameterTypeName = parameterInfo.ParameterType.ToRecursivePSType();
                 command.AppendLine($"  [{parameterTypeName}] ${parameterInfo.Name},");
                 arguments.Add($"${parameterInfo.Name}");
             }

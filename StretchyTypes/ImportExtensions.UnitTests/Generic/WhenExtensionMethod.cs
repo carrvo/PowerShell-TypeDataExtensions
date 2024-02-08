@@ -92,9 +92,9 @@ namespace ImportExtensions.UnitTests.Generic
                 .Skip(1)
                 .First()
                 .ParameterType
-                .ToPSType()
+                .ToRecursivePSType()
                 .Should()
-                .Be($"{typeof(Expression).Namespace}.Expression[System.Func[T,System.Object]]");
+                .Be("System.Func[System.Object,System.Object]");
         }
     }
 }
