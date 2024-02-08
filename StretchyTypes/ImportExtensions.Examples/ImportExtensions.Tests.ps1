@@ -16,6 +16,16 @@ Describe "ImportExtensions" {
 			$example.ExtensionMethod("me") | Should -Be "Hello me from ExtensionMethod"
 		}
 
+		It "Maps Concrete Property Extension" {
+			$example = New-Object ImportExtensions.UnitTests.ExampleClass
+			$example.ExtensionProperty() | Should -Be "Hello from ExtensionProperty"
+		}
+
+		It "Maps Concrete Reference Extension" {
+			$example = New-Object ImportExtensions.UnitTests.ExampleClass
+			$example.ExtensionReference(([ref]"me")) | Should -Be "Hello me from ExtensionReference"
+		}
+
 		Copy-Extensions -From ImportExtensions.UnitTests.IExampleClass -To ImportExtensions.UnitTests.ExampleClass
 
 		It "Updates TypeData for Interface Extension" {
@@ -58,6 +68,11 @@ Describe "ImportExtensions" {
 		It "Maps Generic Extension" {
 			$example = New-Object ImportExtensions.UnitTests.ExampleClass
 			$example.GenericMethod("me") | Should -Be "Hello me from GenericMethod with ExampleClass"
+		}
+
+		It "Maps Unbound Extension" {
+			$example = New-Object ImportExtensions.UnitTests.ExampleClass
+			$example.UnboundMethod("me") | Should -Be "Hello me from UnboundMethod with ExampleClass"
 		}
 	}
 }
