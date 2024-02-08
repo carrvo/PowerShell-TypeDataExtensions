@@ -32,47 +32,40 @@ namespace ImportExtensions
 
         internal static String ToRecursivePSType(this Type type)
         {
-            try
+            var typeStr = new StringBuilder();
+            void ConvertToPSType(Type convert)
             {
-                var typeStr = new StringBuilder();
-                void ConvertToPSType(Type convert)
+                if (convert.IsByRef)
                 {
-                    if (convert.IsByRef)
-                    {
-                        typeStr.Append("ref");
-                        return;
-                    }
-
-                    if (convert.IsGenericParameter)
-                    {
-                        convert = convert.BaseType;
-                    }
-
-                    if (convert.IsGenericType)
-                    {
-                        typeStr.Append(convert.Namespace);
-                        typeStr.Append(".");
-                        typeStr.Append(GenericTypeNameTrimmer.Replace(convert.Name, String.Empty));
-                        typeStr.Append("[");
-                        foreach (var genericArgument in convert.GenericTypeArguments)
-                        {
-                            ConvertToPSType(genericArgument);
-                            typeStr.Append(",");
-                        }
-                        typeStr.Remove(typeStr.Length - 1, 1); // remove final comma `,`
-                        typeStr.Append("]");
-                        return;
-                    }
-
-                    typeStr.Append(convert.FullName);
+                    typeStr.Append("ref");
+                    return;
                 }
-                ConvertToPSType(type);
-                return typeStr.ToString();
+
+                if (convert.IsGenericParameter)
+                {
+                    convert = convert.BaseType;
+                }
+
+                if (convert.IsGenericType)
+                {
+                    typeStr.Append(convert.Namespace);
+                    typeStr.Append(".");
+                    typeStr.Append(GenericTypeNameTrimmer.Replace(convert.Name, String.Empty));
+                    typeStr.Append("[");
+                    foreach (var genericArgument in convert.GenericTypeArguments)
+                    {
+                        ConvertToPSType(genericArgument);
+                        typeStr.Append(",");
+                    }
+                    typeStr.Remove(typeStr.Length - 1, 1); // remove final comma `,`
+                    typeStr.Append("]");
+                    return;
+                }
+
+                typeStr.Append(convert.FullName);
             }
-            catch (StackOverflowException)
-            {
-                return type.ToPSType();
-            }
+            ConvertToPSType(type);
+            return typeStr.ToString();
         }
     }
 }
