@@ -64,7 +64,7 @@ namespace ImportExtensions.UnitTests.Generic
             overflowParameter
                 .ToRecursivePSType()
                 .Should()
-                .Match("ImportExtensions.UnitTests.Generic.RecursiveType[ImportExtensions.UnitTests.Generic.RecursiveType[*");
+                .Be("System.Object");
         }
 
         [Fact]

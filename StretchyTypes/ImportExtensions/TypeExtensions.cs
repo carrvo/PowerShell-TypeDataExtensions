@@ -45,7 +45,7 @@ namespace ImportExtensions
 
                 if (convert.IsGenericParameter)
                 {
-                    if (new StackTrace().FrameCount > 100)
+                    if (convert.BaseType.GenericTypeArguments.FirstOrDefault()?.BaseType == convert.BaseType)
                     {
                         typeStr.Append(typeof(Object).FullName);
                         return;
