@@ -17,9 +17,8 @@ namespace ImportExtensions
             {
                 case 5:
                     // PowerShell 5 does not handle passing arguments to InvokeScript nicely (they seem to be null)
-                    var simple = parameterType.IsGenericParameter ? parameterType.BaseType : parameterType;
                     invocation.InvokeCommand.InvokeScript($@"
-                        Update-TypeData -TypeName {simple} -MemberType ScriptMethod -MemberName {extension} -Value {{{scriptBlock.ToString().Replace(Environment.NewLine, String.Empty)}}}
+                        Update-TypeData -TypeName {parameterType.ToSimplePSType()} -MemberType ScriptMethod -MemberName {extension} -Value {{{scriptBlock.ToString().Replace(Environment.NewLine, String.Empty)}}}
                     ");
                     // create second "dummy" type (for generics) such that it can be referenced differently
                     invocation.InvokeCommand.InvokeScript($@"

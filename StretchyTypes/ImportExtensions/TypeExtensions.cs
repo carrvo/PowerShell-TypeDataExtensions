@@ -11,6 +11,12 @@ namespace ImportExtensions
         private static Regex GenericTypeTrimmer { get; } = new Regex(@"(?<depth>`\d+)\[");
         private static Regex GenericTypeNameTrimmer { get; } = new Regex(@"(?<depth>`\d+)$");
 
+        internal static String ToSimplePSType(this Type type)
+        {
+            var simple = type.IsGenericParameter ? type.BaseType : type;
+            return simple.ToString().Replace("`", "``"); // PowerShell escape character needs to be escaped
+        }
+
         internal static String ToPSType(this Type type)
         {
             if (type.IsByRef)
