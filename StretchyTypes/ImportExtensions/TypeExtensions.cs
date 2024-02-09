@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -43,6 +45,12 @@ namespace ImportExtensions
 
                 if (convert.IsGenericParameter)
                 {
+                    if (new StackTrace().FrameCount > 100)
+                    {
+                        typeStr.Append(typeof(Object).FullName);
+                        return;
+                    }
+
                     convert = convert.BaseType;
                 }
 
